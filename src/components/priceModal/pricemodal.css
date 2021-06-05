@@ -1,0 +1,8 @@
+.priceModalContent {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.externalLink {
+  cursor: pointer;
+}

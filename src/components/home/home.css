@@ -1,0 +1,21 @@
+.mainContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+}
+
+.mainButtonsContainer {
+  margin: 5px;
+}
+
+.uploadButtonContainer {
+  position: absolute;
+  bottom: 100px;
+}
+
+.progress-header {
+  text-align: center
+}
