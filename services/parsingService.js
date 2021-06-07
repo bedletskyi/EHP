@@ -3,6 +3,7 @@ const { Cluster } = require('puppeteer-cluster');
 const cheerio = require('cheerio');
 const UserAgent = require("user-agents");
 const os = require('os');
+const { write } = require('./fsService');
 
 const CONCURRENCY = os.cpus().length;
 const HOTLINE_URL = 'https://hotline.ua';
@@ -58,7 +59,6 @@ const parseDataFromHotline = async (
     maxConcurrency: CONCURRENCY,
     monitor: true,
     puppeteerOptions: {
-      headless: false,
       defaultViewport: {
         width: 1920,
         height: 1080
@@ -78,7 +78,8 @@ const parseDataFromHotline = async (
       win.setProgressBar(numberParsedItems / pricesLength);
       parsedData = [...parsedData, ...price];
     } catch (err) {
-      console.log(err);
+      const textError = `Link: ${data.link}\n ${err.toString()}\n\n`;
+      write(textError);
     }
 
     cb(numberParsedItems / pricesLength);
