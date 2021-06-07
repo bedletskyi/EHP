@@ -1,6 +1,7 @@
 const { BrowserWindow } = require('electron');
 const { Cluster } = require('puppeteer-cluster');
 const cheerio = require('cheerio');
+const UserAgent = require("user-agents");
 const os = require('os');
 
 const CONCURRENCY = os.cpus().length;
@@ -67,6 +68,8 @@ const parseDataFromHotline = async (
 
   await cluster.task(async ({ page, data }) => {
     try {
+      const userAgent = new UserAgent();
+      await page.setUserAgent(userAgent.toString());
       await page.goto(data.link);
       await page.click('div.col-xs-2.flex.right-xs span.sort__item');
       const content = await page.content();
