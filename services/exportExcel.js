@@ -1,5 +1,6 @@
 const Excel = require('exceljs');
 const { dialog, shell } = require('electron');
+const path = require('path');
 
 const SHORT_COLUMN_WIDTH = 12;
 const MIDDLE_COLUMN_WIDTH = 25;
@@ -139,8 +140,10 @@ const exportDataToExcel = (data) => {
       })
       .then((dialogData) => {
         if (dialogData.filePath) {
-          writeDataToExcelFile(xlsData, dialogData.filePath)
-            .then(() => shell.openPath(dialogData.filePath ?? ''))
+          const extName = `.${XLSX_EXTENSION}`;
+          const filePath = path.extname(dialogData.filePath) !== extName ? dialogData.filePath + extName : dialogData.filePath;
+          writeDataToExcelFile(xlsData, filePath)
+            .then(() => shell.openPath(filePath ?? ''))
             .catch((err) => console.log(err));
         }
         return null;
