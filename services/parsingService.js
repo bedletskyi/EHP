@@ -12,7 +12,7 @@ const NOT_ALLOWED_PRICE = ['уцененный', 'знижений у ціні']
 const parsePageContent = (page, priceData) => {
   const $ = cheerio.load(page);
   const priceList = [];
-  $('.list__item').each((i, item) => {
+  $('.price.content .list__item').each((i, item) => {
     const condition = $(item)
       .find('.info__state')
       .text()
@@ -73,6 +73,7 @@ const parseDataFromHotline = async (
       await page.goto(data.link);
       await page.click('div.col-xs-2.flex.right-xs span.sort__item');
       const content = await page.content();
+      write(content);
       const price = parsePageContent(content ?? '', data);
       numberParsedItems += 1;
       win.setProgressBar(numberParsedItems / pricesLength);
