@@ -34,13 +34,23 @@ const parsePageContent = (page, priceData) => {
       10
     );
 
-    priceList.push({
+    const currentPriceItem = {
       ...priceData,
       store,
       storeLink,
       hotlinePrice,
       hotlinePosition: i + 1
-    });
+    };
+
+    const duplicateItem = priceList.find(item => (
+      item.sku === currentPriceItem.sku &&
+      item.store === currentPriceItem.store &&
+      item.hotlinePrice === currentPriceItem.hotlinePrice
+    ));
+
+    if (!duplicateItem && duplicateItem.hotlinePosition > currentPriceItem.hotlinePosition) {
+      priceList.push(currentPriceItem);
+    }
   });
   return priceList;
 };
