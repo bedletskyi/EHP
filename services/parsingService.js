@@ -43,13 +43,18 @@ const parsePageContent = (page, priceData) => {
     };
 
     const duplicateItem = priceList.find(item => (
-      item.sku === currentPriceItem.sku &&
       item.store === currentPriceItem.store &&
       item.hotlinePrice === currentPriceItem.hotlinePrice
     ));
 
-    if (!duplicateItem && duplicateItem.hotlinePosition > currentPriceItem.hotlinePosition) {
+    if (!duplicateItem) {
       priceList.push(currentPriceItem);
+    } else if (duplicateItem.hotlinePosition > currentPriceItem.hotlinePosition) {
+      const duplicateItemIndex = priceList.findIndex(item => (
+        item.store === currentPriceItem.store &&
+        item.hotlinePrice === currentPriceItem.hotlinePrice
+      ));
+      priceList[duplicateItemIndex] = currentPriceItem;
     }
   });
   return priceList;
@@ -78,6 +83,7 @@ const parseDataFromHotline = async (
 
   await cluster.task(async ({ page, data }) => {
     try {
+      numberParsedItems += 1;
       const userAgent = new UserAgent();
       await page.setUserAgent(userAgent.toString());
       await page.goto(data.link);
@@ -85,7 +91,6 @@ const parseDataFromHotline = async (
       const content = await page.content();
       write(content);
       const price = parsePageContent(content ?? '', data);
-      numberParsedItems += 1;
       win.setProgressBar(numberParsedItems / pricesLength);
       parsedData = [...parsedData, ...price];
     } catch (err) {
