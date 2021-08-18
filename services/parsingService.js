@@ -89,7 +89,6 @@ const parseDataFromHotline = async (
       await page.goto(data.link);
       await page.click('div.col-xs-2.flex.right-xs span.sort__item');
       const content = await page.content();
-      write(content);
       const price = parsePageContent(content ?? '', data);
       win.setProgressBar(numberParsedItems / pricesLength);
       parsedData = [...parsedData, ...price];
